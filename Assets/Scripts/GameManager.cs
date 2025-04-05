@@ -73,7 +73,6 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log("Grid enabled");
         StartCoroutine(Simulate());
     }
 
@@ -86,7 +85,6 @@ public class GameManager : MonoBehaviour
     {
         while (enabled)
         {
-            Debug.Log("Simulating...");
             // Update the next state based on the current state
             UpdateNextState();
 
