@@ -1,0 +1,59 @@
+# Unity-generated folders
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Logs/
+UserSettings/
+MemoryCaptures/
+
+# Visual Studio / MonoDevelop generated files
+ExportedObj/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Rider IDE files
+.idea/
+*.sln.iml
+
+# Visual Studio Code
+.vscode/
+
+# Unity3D generated meta files
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# OS generated
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# Unity-specific settings
+sysinfo.txt
+UnityShaderCompiler.exe
+
+# Asset meta data should be version controlled, so don't ignore:
+!*.meta
+
+# Include Unity's package manifest but ignore package lock
+Packages/packages-lock.json
+
