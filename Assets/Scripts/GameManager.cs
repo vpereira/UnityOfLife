@@ -42,12 +42,10 @@ public class GameManager : MonoBehaviour
         // Set the pattern in the current state tilemap
         if (isCentered)
         {
-            Debug.Log("Pattern is centered");
             offset = pattern.GetCenter();
         }
         else
         {
-            Debug.Log("Pattern is not centered");
             offset = GetGenesisPosition();
         }
         SetPattern(pattern, offset);
