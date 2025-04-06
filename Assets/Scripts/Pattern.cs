@@ -3,12 +3,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Pattern", menuName = "Scriptable Objects/Pattern")]
 public class Pattern : ScriptableObject
 {
-   public Vector2Int[] cells; 
+    public Vector2Int[] cells;
 
     // get the center of the Cells
-    public Vector2Int GetCenter()
+    public Vector3Int GetCenter()
     {
-        if (cells.Length == 0) return Vector2Int.zero;
+        if (cells.Length == 0) return Vector3Int.zero;
 
         int minX = cells[0].x;
         int maxX = cells[0].x;
@@ -23,6 +23,6 @@ public class Pattern : ScriptableObject
             if (cell.y > maxY) maxY = cell.y;
         }
 
-        return new Vector2Int((minX + maxX) / 2, (minY + maxY) / 2);
+        return new Vector3Int((minX + maxX) / 2, (minY + maxY) / 2, 0);
     }
 }

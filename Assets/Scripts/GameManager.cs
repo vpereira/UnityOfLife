@@ -38,43 +38,39 @@ public class GameManager : MonoBehaviour
         // Clear the current state and next state tilemaps
         ClearPattern();
 
+        Vector3Int offset = Vector3Int.zero;
+
         // Set the pattern in the current state tilemap
         if (isCentered)
         {
-            SetCenteredPattern(pattern);
+            Debug.Log("Pattern is centered");
+            offset = pattern.GetCenter();
         }
         else
         {
-            SetUncenteredPattern(pattern);
+            Debug.Log("Pattern is not centered");
+            offset = GetGenesisPosition();
         }
+        SetPattern(pattern, offset);
     }
 
-    private void SetUncenteredPattern(Pattern pattern)
+    private Vector3Int GetGenesisPosition()
+    {
+        return currentState.WorldToCell(genesisPoint.transform.position);
+    }
+
+
+    private void SetPattern(Pattern pattern, Vector3Int cellPosition)
     {
         ClearPattern();
-        Vector3Int genesisCell = currentState.WorldToCell(genesisPoint.transform.position);
 
         foreach (Vector2Int cell in pattern.cells)
         {
-            Vector3Int targetCell =  new Vector3Int(cell.x + genesisCell.x, cell.y + genesisCell.y, 0);
+            Vector3Int targetCell = new Vector3Int(cell.x + cellPosition.x, cell.y + cellPosition.y, 0);
             currentState.SetTile(targetCell, cellTile);
         }
     }
 
-    
-    private void SetCenteredPattern(Pattern pattern) {
-        ClearPattern();
-        Vector2Int center = pattern.GetCenter();
-
-        foreach (Vector2Int cell in pattern.cells)
-        {
-            // Offset the cell position by the center of the pattern
-            Vector2Int offsetCell = new Vector2Int(cell.x, cell.y);
-            offsetCell.x -= center.x;
-            offsetCell.y -= center.y;
-            currentState.SetTile((Vector3Int)offsetCell, cellTile);
-        }
-    }
     private void ClearPattern()
     {
         currentState.ClearAllTiles();
@@ -90,7 +86,7 @@ public class GameManager : MonoBehaviour
     {
         StopCoroutine(Simulate());
     }
-    
+
     private IEnumerator Simulate()
     {
         while (enabled)

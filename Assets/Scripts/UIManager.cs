@@ -32,10 +32,10 @@ public class UIManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-       aliveCellsCount = gameManager.GetAliveCellsCount();
-       UpdateAliveCellsText();
-       StartCoroutine(UpdateFPS()); 
-       StartCoroutine(UpdateAliveCells());
+        aliveCellsCount = gameManager.GetAliveCellsCount();
+        UpdateAliveCellsText();
+        StartCoroutine(UpdateFPS());
+        StartCoroutine(UpdateAliveCells());
     }
 
     private void UpdateAliveCellsText()
