@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject genesisPoint;
 
+    [SerializeField] private GameObject gridLines;
+
     private int generation = 0;
     public int Generation => generation;
 
@@ -42,7 +44,12 @@ public class GameManager : MonoBehaviour
         // Set the pattern in the current state tilemap
         if (isCentered)
         {
-            offset = pattern.GetCenter();
+            Vector3 cameraCenterWorld = Camera.main.transform.position;
+            offset = currentState.WorldToCell(cameraCenterWorld);
+
+            // Optional: snap to nearest tile
+            offset.z = 0;
+            // offset = pattern.GetCenter();
         }
         else
         {
@@ -190,6 +197,13 @@ public class GameManager : MonoBehaviour
     private bool IsCellAlive(Vector3Int cell)
     {
         return currentState.GetTile(cell) == cellTile;
+    }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            gridLines.SetActive(!gridLines.activeSelf);
+        }
     }
 }
 
