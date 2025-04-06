@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     private int generation = 0;
     public int Generation => generation;
 
+    private Coroutine simulationCoroutine;
+
 
     void Start()
     {
@@ -76,12 +78,13 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
-        StartCoroutine(Simulate());
+        simulationCoroutine = StartCoroutine(Simulate());
     }
 
     private void OnDisable()
     {
-        StopCoroutine(Simulate());
+        if(simulationCoroutine != null)
+            StopCoroutine(simulationCoroutine);
     }
 
     private IEnumerator Simulate()

@@ -637,7 +637,7 @@ MonoBehaviour:
   nextState: {fileID: 384575654}
   cellTile: {fileID: 11400000, guid: bf9702f1ccc914367aabee074a69e9d8, type: 2}
   updateInterval: 0.5
-  cellCentered: 0
+  cellCentered: 1
   pattern: {fileID: 11400000, guid: 15962eb96e4bb49ac8702884f7aed879, type: 2}
   genesisPoint: {fileID: 600011677}
 --- !u!1 &953078740
