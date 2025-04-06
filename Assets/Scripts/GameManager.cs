@@ -141,6 +141,10 @@ public class GameManager : MonoBehaviour
 
     private void UpdateNextState()
     {
+
+        // early return if no cells are alive
+        if (GetAliveCellsCount() == 0) return;
+
         BoundsInt bounds = currentState.cellBounds;
 
         // Expand bounds by 1 to ensure all neighbors are evaluated

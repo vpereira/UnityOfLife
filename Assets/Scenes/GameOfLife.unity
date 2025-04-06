@@ -638,7 +638,7 @@ MonoBehaviour:
   cellTile: {fileID: 11400000, guid: bf9702f1ccc914367aabee074a69e9d8, type: 2}
   updateInterval: 0.5
   cellCentered: 1
-  pattern: {fileID: 11400000, guid: 15962eb96e4bb49ac8702884f7aed879, type: 2}
+  pattern: {fileID: 11400000, guid: 127a6b6f74bec42e7951419b45476d61, type: 2}
   genesisPoint: {fileID: 600011677}
 --- !u!1 &953078740
 GameObject:
