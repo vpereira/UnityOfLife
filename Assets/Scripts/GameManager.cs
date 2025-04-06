@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
 
         foreach (Vector2Int cell in pattern.cells)
         {
-            Vector3Int targetCell = new Vector3Int(cell.x + cellPosition.x, cell.y + cellPosition.y, 0);
+            Vector3Int targetCell = cellPosition + new Vector3Int(cell.x, cell.y, 0);
             currentState.SetTile(targetCell, cellTile);
         }
     }
