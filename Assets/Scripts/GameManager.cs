@@ -11,15 +11,21 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private float updateInterval = 0.5f; //seconds
 
-    [SerializeField] private bool cellCentered = true;
+    [SerializeField] private bool cellCentered;
 
-    [SerializeField] private Pattern patterns;
+    [SerializeField] private Pattern pattern;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    [SerializeField] private GameObject genesisPoint;
+
+    private int generation = 0;
+    public int Generation => generation;
+
+
     void Start()
     {
-        SetPattern(patterns, cellCentered);
+        SetPattern(pattern, cellCentered);
     }
-
 
     private void SetPattern(Pattern pattern, bool isCentered = true)
     {
@@ -46,12 +52,16 @@ public class GameManager : MonoBehaviour
     private void SetUncenteredPattern(Pattern pattern)
     {
         ClearPattern();
+        Vector3Int genesisCell = currentState.WorldToCell(genesisPoint.transform.position);
+
         foreach (Vector2Int cell in pattern.cells)
         {
-            // Set the tile at the cell position
-            currentState.SetTile((Vector3Int)cell, cellTile);
+            Vector3Int targetCell =  new Vector3Int(cell.x + genesisCell.x, cell.y + genesisCell.y, 0);
+            currentState.SetTile(targetCell, cellTile);
         }
     }
+
+    
     private void SetCenteredPattern(Pattern pattern) {
         ClearPattern();
         Vector2Int center = pattern.GetCenter();
@@ -87,12 +97,6 @@ public class GameManager : MonoBehaviour
         {
             // Update the next state based on the current state
             UpdateNextState();
-
-            // Swap the current and next states
-            // Tilemap temp = currentState;
-            // currentState = nextState;
-            // nextState = temp;
-
             // Wait for the specified update interval
             yield return new WaitForSeconds(updateInterval);
         }
@@ -171,6 +175,9 @@ public class GameManager : MonoBehaviour
                 nextState.SetTile(cell, null);
             }
         }
+
+        // Update the current generation
+        generation++;
 
         // Swap states
         Tilemap temp = currentState;

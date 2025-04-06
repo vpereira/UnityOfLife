@@ -8,6 +8,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text aliveCellsText;
     [SerializeField] private TMP_Text fpsText;
     [SerializeField] private Grid grid;
+    [SerializeField] private TMP_Text generationText;
+
 
     private GameManager gameManager;
 
@@ -41,6 +43,11 @@ public class UIManager : MonoBehaviour
         aliveCellsText.text = "Alive Cells: " + ((byte)aliveCellsCount).ToString();
     }
 
+    private void UpdateGenerationText()
+    {
+        generationText.text = "Generation: " + gameManager.Generation.ToString();
+    }
+
     private IEnumerator UpdateAliveCells()
     {
         while (true)
@@ -48,6 +55,7 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(frequency);
             aliveCellsCount = gameManager.GetAliveCellsCount();
             UpdateAliveCellsText();
+            UpdateGenerationText();
         }
     }
 
