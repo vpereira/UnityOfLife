@@ -35,9 +35,6 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // Clear the current state and next state tilemaps
-        ClearPattern();
-
         Vector3Int offset = Vector3Int.zero;
 
         // Set the pattern in the current state tilemap
