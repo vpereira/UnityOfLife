@@ -16,6 +16,10 @@ public class GridLineDrawer : MonoBehaviour
         DrawGrid();
     }
 
+    // Bottom-left alignment
+    // This method aligns the camera to the bottom-left corner of the grid
+    // and ensures that the grid is centered around the camera position.
+    // It also ensures that the grid size matches the camera's view.
     void AlignCameraToBottomLeft()
     {
         Camera cam = Camera.main;
@@ -26,22 +30,25 @@ public class GridLineDrawer : MonoBehaviour
         cam.transform.position = new Vector3(camWidth / 2f, camHeight / 2f, -10f);
     }
 
-Vector3 GetCameraBottomLeft()
-{
-    Camera cam = Camera.main;
-    float camHeight = cam.orthographicSize * 2f;
-    float camWidth = camHeight * cam.aspect;
+    // Get the bottom-left corner of the camera's view in world coordinates
+    // This method calculates the bottom-left corner of the camera's view
+    // in world coordinates based on the camera's orthographic size and aspect ratio.
+    // Used as the starting point for drawing grid lines.
+    Vector3 GetCameraBottomLeft()
+    {
+        Camera cam = Camera.main;
+        float camHeight = cam.orthographicSize * 2f;
+        float camWidth = camHeight * cam.aspect;
 
-    Vector3 camCenter = cam.transform.position;
-    return new Vector3(
-        camCenter.x - camWidth / 2f,
-        camCenter.y - camHeight / 2f,
-        0f
-    );
-}
+        Vector3 camCenter = cam.transform.position;
+        return new Vector3(
+            camCenter.x - camWidth / 2f,
+            camCenter.y - camHeight / 2f,
+            0f
+        );
+    }
 
-   
-
+    // Make the grid size match the camera's view
     void UpdateGridSizeToMatchCamera()
     {
         Camera cam = Camera.main;
@@ -60,31 +67,33 @@ Vector3 GetCameraBottomLeft()
         height = Mathf.CeilToInt(camHeightWorldUnits / cellSize);
     }
     
-void DrawGrid()
-{
-    Vector3 bottomLeft = GetCameraBottomLeft();
-
-    // Adjust so the grid is centered around camera position
-    bottomLeft = new Vector3(
-        Mathf.Floor(bottomLeft.x / cellSize) * cellSize,
-        Mathf.Floor(bottomLeft.y / cellSize) * cellSize,
-        0f
-    );
-
-    for (int x = 0; x <= width; x++)
+    void DrawGrid()
     {
-        Vector3 start = bottomLeft + new Vector3(x * cellSize, 0, 0);
-        Vector3 end = bottomLeft + new Vector3(x * cellSize, height * cellSize, 0);
-        CreateLine(start, end);
-    }
+        Vector3 bottomLeft = GetCameraBottomLeft();
 
-    for (int y = 0; y <= height; y++)
-    {
-        Vector3 start = bottomLeft + new Vector3(0, y * cellSize, 0);
-        Vector3 end = bottomLeft + new Vector3(width * cellSize, y * cellSize, 0);
-        CreateLine(start, end);
+        // Adjust so the grid is centered around camera position
+        bottomLeft = new Vector3(
+            Mathf.Floor(bottomLeft.x / cellSize) * cellSize,
+            Mathf.Floor(bottomLeft.y / cellSize) * cellSize,
+            0f
+        );
+
+        // Draw horizontal lines
+        for (int x = 0; x <= width; x++)
+        {
+            Vector3 start = bottomLeft + new Vector3(x * cellSize, 0, 0);
+            Vector3 end = bottomLeft + new Vector3(x * cellSize, height * cellSize, 0);
+            CreateLine(start, end);
+        }
+
+        // Draw vertical lines
+        for (int y = 0; y <= height; y++)
+        {
+            Vector3 start = bottomLeft + new Vector3(0, y * cellSize, 0);
+            Vector3 end = bottomLeft + new Vector3(width * cellSize, y * cellSize, 0);
+            CreateLine(start, end);
+        }
     }
-}
 
     void CreateLine(Vector3 start, Vector3 end)
     {
