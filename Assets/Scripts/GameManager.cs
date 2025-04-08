@@ -119,6 +119,9 @@ public class GameManager : MonoBehaviour
         return aliveCount;
     }
 
+    // Suppose you're checking cell (10,10) and it has live neighbors at:
+    // (9,10), (10,11), and (11,11)
+    // Then CountAliveNeighbors(new Vector3Int(10,10)) would return 3.
     private int CountAliveNeighbors(Vector3Int cell)
     {
         int aliveCount = 0;
@@ -139,7 +142,6 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-
         return aliveCount;
     }
 
@@ -206,5 +208,3 @@ public class GameManager : MonoBehaviour
         }
     }
 }
-
-
