@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDisable()
     {
-        if(simulationCoroutine != null)
+        if (simulationCoroutine != null)
             StopCoroutine(simulationCoroutine);
     }
 

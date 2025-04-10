@@ -66,7 +66,7 @@ public class GridLineDrawer : MonoBehaviour
         width = Mathf.CeilToInt(camWidthWorldUnits / cellSize);
         height = Mathf.CeilToInt(camHeightWorldUnits / cellSize);
     }
-    
+
     void DrawGrid()
     {
         Vector3 bottomLeft = GetCameraBottomLeft();
