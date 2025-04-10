@@ -3,6 +3,9 @@
 A retro-inspired implementation of Conway's Game of Life using Unity. Built to introduce the topic
 to my kids. Improved it for the sake of keeping my skills on C# + Unity sharp.
 
+
+![Game of Life demo](Assets/Preview/game.gif)
+
 ## Features
 
 - Cell simulation using Tilemaps
