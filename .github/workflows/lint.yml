@@ -1,0 +1,35 @@
+name: Lint C# Scripts
+
+on:
+  push:
+    paths:
+      - '**.cs'
+  pull_request:
+    paths:
+      - '**.cs'
+
+jobs:
+  dotnet-format:
+    name: Verify C# formatting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Install dotnet-format
+        run: dotnet tool install -g dotnet-format
+
+      - name: Create temporary solution
+        run: |
+          dotnet new sln --name ConwayTemp
+          find . -name '*.csproj' -exec dotnet sln ConwayTemp.sln add {} \;
+
+      - name: Run dotnet format
+        run: dotnet format ConwayTemp.sln --verify-no-changes --verbosity minimal
+
