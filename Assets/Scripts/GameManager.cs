@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool cellCentered;
 
     [SerializeField] private Pattern pattern;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     [SerializeField] private GameObject genesisPoint;
 
