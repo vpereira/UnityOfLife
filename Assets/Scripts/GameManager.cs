@@ -32,6 +32,22 @@ public class GameManager : MonoBehaviour
         SetPattern(pattern, cellCentered);
     }
 
+    private BoundsInt GetCameraTileBounds()
+    {
+        Camera cam = Camera.main;
+        float camHeight = cam.orthographicSize * 2f;
+        float camWidth = camHeight * cam.aspect;
+
+        Vector3 bottomLeft = cam.transform.position - new Vector3(camWidth / 2f, camHeight / 2f, 0);
+        Vector3 topRight = cam.transform.position + new Vector3(camWidth / 2f, camHeight / 2f, 0);
+
+        Vector3Int min = currentState.WorldToCell(bottomLeft);
+        Vector3Int max = currentState.WorldToCell(topRight);
+
+        return new BoundsInt(min.x, min.y, 0, max.x - min.x + 1, max.y - min.y + 1, 1);
+    }
+
+
     private void SetPattern(Pattern pattern, bool isCentered = true)
     {
         if (pattern == null)
@@ -121,21 +137,22 @@ public class GameManager : MonoBehaviour
     // Suppose you're checking cell (10,10) and it has live neighbors at:
     // (9,10), (10,11), and (11,11)
     // Then CountAliveNeighbors(new Vector3Int(10,10)) would return 3.
-    private int CountAliveNeighbors(Vector3Int cell)
+    private int CountAliveNeighbors(Vector3Int cell, BoundsInt bounds)
     {
         int aliveCount = 0;
 
-        // Check all 8 neighboring cells
         for (int x = -1; x <= 1; x++)
         {
             for (int y = -1; y <= 1; y++)
             {
-                // Skip the current cell
                 if (x == 0 && y == 0) continue;
 
-                Vector3Int neighborCell = new Vector3Int(cell.x + x, cell.y + y);
+                Vector3Int neighbor = new Vector3Int(cell.x + x, cell.y + y, 0);
 
-                if (IsCellAlive(neighborCell))
+                // Skip if outside bounds
+                if (!bounds.Contains(neighbor)) continue;
+
+                if (IsCellAlive(neighbor))
                 {
                     aliveCount++;
                 }
@@ -144,53 +161,36 @@ public class GameManager : MonoBehaviour
         return aliveCount;
     }
 
-
     private void UpdateNextState()
     {
+        BoundsInt cameraBounds = GetCameraTileBounds();
 
-        // early return if no cells are alive
-        if (GetAliveCellsCount() == 0) return;
-
-        BoundsInt bounds = currentState.cellBounds;
-
-        // Expand bounds by 1 to ensure all neighbors are evaluated
-        bounds.xMin -= 1;
-        bounds.yMin -= 1;
-        bounds.xMax += 1;
-        bounds.yMax += 1;
-
-        // Iterate through the expanded bounds
-        foreach (Vector3Int cell in bounds.allPositionsWithin)
+        // Iterate through visible camera area only
+        foreach (Vector3Int cell in cameraBounds.allPositionsWithin)
         {
             bool isAlive = IsCellAlive(cell);
-            int aliveNeighbors = CountAliveNeighbors(cell);
+            int aliveNeighbors = CountAliveNeighbors(cell, cameraBounds);
 
             if (!isAlive && aliveNeighbors == 3)
             {
-                // Dead cell becomes alive
                 nextState.SetTile(cell, cellTile);
             }
             else if (isAlive && (aliveNeighbors == 2 || aliveNeighbors == 3))
             {
-                // Alive cell stays alive
                 nextState.SetTile(cell, cellTile);
             }
             else
             {
-                // Cell dies or remains dead
                 nextState.SetTile(cell, null);
             }
         }
 
-        // Update the current generation
         generation++;
 
-        // Swap states
+        // Swap and clear
         Tilemap temp = currentState;
         currentState = nextState;
         nextState = temp;
-
-        // Clear nextState to prepare for next iteration
         nextState.ClearAllTiles();
     }
 
