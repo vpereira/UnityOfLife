@@ -44,13 +44,14 @@ Patterns are stored as `ScriptableObject` assets and support live preview in the
 You can easily create new patterns or import classic ones like:
 - Glider
 - R-pentomino
-- Acorn
+- Diehard
+- Blinker
 - Penta-decathlon
 - TBD
 
 ## Grid Overlay
 
-A `GridLineDrawer` component dynamically draws grid lines to match the camera view using `LineRenderer`s. Toggle it on/off at runtime with the `G` key.
+A `GridLineDrawer` component dynamically draws grid lines to match the camera view using `LineRenderer`. Toggle it on/off at runtime with the `G` key.
 
 ## Requirements
 
