@@ -33,7 +33,6 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         aliveCellsCount = gameManager.GetAliveCellsCount();
-        UpdateAliveCellsText();
         StartCoroutine(UpdateFPS());
         StartCoroutine(UpdateAliveCells());
     }
