@@ -10,6 +10,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Grid grid;
     [SerializeField] private TMP_Text generationText;
 
+    [SerializeField] private TMP_Text wrapAroundText;
+
 
     private GameManager gameManager;
 
@@ -47,6 +49,11 @@ public class UIManager : MonoBehaviour
         generationText.text = "Generation: " + gameManager.Generation.ToString();
     }
 
+    private void UpdateWrapAroundText()
+    {
+        wrapAroundText.text = "Wrap Around: " + gameManager.WrapAroundEnabled.ToString();
+    }
+
     private IEnumerator UpdateAliveCells()
     {
         while (true)
@@ -55,6 +62,7 @@ public class UIManager : MonoBehaviour
             aliveCellsCount = gameManager.GetAliveCellsCount();
             UpdateAliveCellsText();
             UpdateGenerationText();
+            UpdateWrapAroundText();
         }
     }
 

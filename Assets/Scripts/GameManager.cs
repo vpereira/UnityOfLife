@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     private int generation = 0;
     public int Generation => generation;
 
+    public bool WrapAroundEnabled => wrapAroundEnabled;
+
     private Coroutine simulationCoroutine;
 
 
