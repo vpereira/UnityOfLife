@@ -21,12 +21,13 @@ to my kids. Improved it for the sake of keeping my skills on C# + Unity sharp.
 
 ## Controls
 
-| Key | Action                         |
-|-----|------------------------------  |
-| `R` | Spawn a new pattern randomly   |
-| `G` | Toggle grid overlay            |
-| `C` | Load a random color to be used |
-| `W` | Toggle Wrap around mode        |
+| Key | Action                                          |
+|-----|-------------------------------------------------|
+| `R` | Spawn a new pattern randomly                    |
+| `G` | Toggle grid overlay                             |
+| `C` | Load a random color to be used                  |
+| `W` | Toggle Wrap around mode                         |
+| `P` | Choose a random Pattern from the Pattern Library|
 
 ## Folder Structure
 

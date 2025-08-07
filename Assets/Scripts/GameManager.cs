@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool wrapAroundEnabled = false;
 
     [SerializeField] private Color defaultPatternColor = Color.white;
+    [SerializeField] private List<Pattern> patternLibrary = new();
 
     private int generation = 0;
     public int Generation => generation;
@@ -31,10 +32,14 @@ public class GameManager : MonoBehaviour
 
     private Coroutine simulationCoroutine;
 
+    private bool useRandomPatternNext = false;
 
     private bool useRandomColorNext = false;
 
+
     private Dictionary<Vector3Int, Color> tileColors = new();
+
+
 
     private HashSet<string> seenPatterns = new();
 
@@ -271,12 +276,19 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.C))
             useRandomColorNext = true;
 
+        if (Input.GetKeyDown(KeyCode.P))
+            useRandomPatternNext = true;
 
         if (Input.GetKeyDown(KeyCode.R))
         {
             Vector3Int randomCell = GetRandomCellInsideCamera();
-            PlacePattern(pattern, randomCell); // spawn at random position
+
+            Pattern selectedPattern = useRandomPatternNext && patternLibrary.Count > 0 ? patternLibrary[Random.Range(0, patternLibrary.Count)] : pattern;
+
+            SetPattern(selectedPattern, false);
+            PlacePattern(selectedPattern, randomCell);
             useRandomColorNext = false; // Reset the flag after placing the pattern
+            useRandomPatternNext = false; // Reset the flag after placing the pattern
         }
 
         if (Input.GetKeyDown(KeyCode.W))
