@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,6 +25,11 @@ public class GameManager : MonoBehaviour
 
     private Coroutine simulationCoroutine;
 
+    [SerializeField] private Color defaultPatternColor = Color.white;
+
+    private bool useRandomColorNext = false;
+
+    private Dictionary<Vector3Int, Color> tileColors = new();
 
     void Start()
     {
@@ -74,6 +80,11 @@ public class GameManager : MonoBehaviour
         PlacePattern(pattern, offset);
     }
 
+    private Color GetRandomColor()
+    {
+        return new Color(Random.value, Random.value, Random.value);
+    }
+
     private Vector3Int GetGenesisPosition()
     {
         return currentState.WorldToCell(genesisPoint.transform.position);
@@ -82,11 +93,13 @@ public class GameManager : MonoBehaviour
 
     private void PlacePattern(Pattern pattern, Vector3Int cellPosition)
     {
-
+        Color patternColor = useRandomColorNext ? GetRandomColor() : defaultPatternColor;
         foreach (Vector2Int cell in pattern.cells)
         {
             Vector3Int targetCell = cellPosition + new Vector3Int(cell.x, cell.y, 0);
             currentState.SetTile(targetCell, cellTile);
+            currentState.SetColor(targetCell, patternColor);
+            tileColors[targetCell] = patternColor; // Store the color for this cell
         }
     }
 
@@ -94,6 +107,7 @@ public class GameManager : MonoBehaviour
     {
         currentState.ClearAllTiles();
         nextState.ClearAllTiles();
+        tileColors.Clear();
     }
 
     private void OnEnable()
@@ -163,7 +177,7 @@ public class GameManager : MonoBehaviour
     private void UpdateNextState()
     {
         BoundsInt cameraBounds = GetCameraTileBounds();
-
+        Dictionary<Vector3Int, Color> newTileColors = new();
         // Iterate through visible camera area only
         foreach (Vector3Int cell in cameraBounds.allPositionsWithin)
         {
@@ -173,10 +187,16 @@ public class GameManager : MonoBehaviour
             if (!isAlive && aliveNeighbors == 3)
             {
                 nextState.SetTile(cell, cellTile);
+                Color inheritedColor = GetFirstAliveNeighborColor(cell, cameraBounds);
+                nextState.SetColor(cell, inheritedColor);
+                newTileColors[cell] = inheritedColor;
             }
             else if (isAlive && (aliveNeighbors == 2 || aliveNeighbors == 3))
             {
                 nextState.SetTile(cell, cellTile);
+                if (tileColors.TryGetValue(cell, out var color))
+                    nextState.SetColor(cell, color);
+                    newTileColors[cell] = color; // Keep the same color
             }
             else
             {
@@ -189,8 +209,27 @@ public class GameManager : MonoBehaviour
         // Swap and clear
         Tilemap temp = currentState;
         currentState = nextState;
+        tileColors = newTileColors;
         nextState = temp;
         nextState.ClearAllTiles();
+    }
+
+
+    private Color GetFirstAliveNeighborColor(Vector3Int cell, BoundsInt bounds)
+    {
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                if (x == 0 && y == 0) continue;
+
+                Vector3Int neighbor = new Vector3Int(cell.x + x, cell.y + y, 0);
+                if (bounds.Contains(neighbor) && tileColors.TryGetValue(neighbor, out var color))
+                    return color;
+            }
+        }
+
+        return defaultPatternColor;
     }
 
 
@@ -205,10 +244,15 @@ public class GameManager : MonoBehaviour
             gridLines.SetActive(!gridLines.activeSelf);
         }
 
+        if (Input.GetKeyDown(KeyCode.C))
+         useRandomColorNext = true;
+
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             Vector3Int randomCell = GetRandomCellInsideCamera();
             PlacePattern(pattern, randomCell); // spawn at random position
+            useRandomColorNext  = false; // Reset the flag after placing the pattern
         }
     }
 
