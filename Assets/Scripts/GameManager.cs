@@ -166,7 +166,7 @@ public class GameManager : MonoBehaviour
                 Vector3Int neighbor = new Vector3Int(cell.x + x, cell.y + y, 0);
 
                 // Skip if outside bounds
-                if (!bounds.Contains(neighbor)) 
+                if (!bounds.Contains(neighbor))
                     if (wrapAroundEnabled)
                         neighbor = WrapCoordinate(neighbor, bounds);
                     else
