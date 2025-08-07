@@ -16,13 +16,15 @@ to my kids. Improved it for the sake of keeping my skills on C# + Unity sharp.
 - Pixel Perfect Camera setup for crisp visuals
 - Dead cells outside camera view (screen-culling mode)
 - Live FPS and cell counter
+- Colorful Patterns
 
 ## Controls
 
-| Key | Action                       |
-|-----|------------------------------|
-| `R` | Spawn a new pattern randomly |
-| `G` | Toggle grid overlay          |
+| Key | Action                         |
+|-----|------------------------------  |
+| `R` | Spawn a new pattern randomly   |
+| `G` | Toggle grid overlay            |
+| `C` | Load a random color to be used |
 
 ## Folder Structure
 
