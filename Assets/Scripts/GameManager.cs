@@ -196,7 +196,7 @@ public class GameManager : MonoBehaviour
                 nextState.SetTile(cell, cellTile);
                 if (tileColors.TryGetValue(cell, out var color))
                     nextState.SetColor(cell, color);
-                    newTileColors[cell] = color; // Keep the same color
+                newTileColors[cell] = color; // Keep the same color
             }
             else
             {
@@ -245,14 +245,14 @@ public class GameManager : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.C))
-         useRandomColorNext = true;
+            useRandomColorNext = true;
 
 
         if (Input.GetKeyDown(KeyCode.R))
         {
             Vector3Int randomCell = GetRandomCellInsideCamera();
             PlacePattern(pattern, randomCell); // spawn at random position
-            useRandomColorNext  = false; // Reset the flag after placing the pattern
+            useRandomColorNext = false; // Reset the flag after placing the pattern
         }
     }
 
