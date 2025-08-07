@@ -20,12 +20,15 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject gridLines;
 
+    [SerializeField] private bool wrapAroundEnabled = false;
+
+    [SerializeField] private Color defaultPatternColor = Color.white;
+
     private int generation = 0;
     public int Generation => generation;
 
     private Coroutine simulationCoroutine;
 
-    [SerializeField] private Color defaultPatternColor = Color.white;
 
     private bool useRandomColorNext = false;
 
@@ -163,7 +166,11 @@ public class GameManager : MonoBehaviour
                 Vector3Int neighbor = new Vector3Int(cell.x + x, cell.y + y, 0);
 
                 // Skip if outside bounds
-                if (!bounds.Contains(neighbor)) continue;
+                if (!bounds.Contains(neighbor)) 
+                    if (wrapAroundEnabled)
+                        neighbor = WrapCoordinate(neighbor, bounds);
+                    else
+                        continue;
 
                 if (IsCellAlive(neighbor))
                 {
@@ -254,6 +261,24 @@ public class GameManager : MonoBehaviour
             PlacePattern(pattern, randomCell); // spawn at random position
             useRandomColorNext = false; // Reset the flag after placing the pattern
         }
+
+        if (Input.GetKeyDown(KeyCode.W))
+            wrapAroundEnabled = !wrapAroundEnabled;
+
+    }
+
+    private Vector3Int WrapCoordinate(Vector3Int cell, BoundsInt bounds)
+    {
+        int x = cell.x;
+        int y = cell.y;
+
+        if (x < bounds.xMin) x = bounds.xMax - 1;
+        if (x >= bounds.xMax) x = bounds.xMin;
+
+        if (y < bounds.yMin) y = bounds.yMax - 1;
+        if (y >= bounds.yMax) y = bounds.yMin;
+
+        return new Vector3Int(x, y, 0);
     }
 
     private Vector3Int GetRandomCellInsideCamera()

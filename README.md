@@ -17,6 +17,7 @@ to my kids. Improved it for the sake of keeping my skills on C# + Unity sharp.
 - Dead cells outside camera view (screen-culling mode)
 - Live FPS and cell counter
 - Colorful Patterns
+- Wrap around toggle 
 
 ## Controls
 
@@ -25,6 +26,7 @@ to my kids. Improved it for the sake of keeping my skills on C# + Unity sharp.
 | `R` | Spawn a new pattern randomly   |
 | `G` | Toggle grid overlay            |
 | `C` | Load a random color to be used |
+| `W` | Toggle Wrap around mode        |
 
 ## Folder Structure
 
