@@ -34,10 +34,20 @@ public class GameManager : MonoBehaviour
 
     private Dictionary<Vector3Int, Color> tileColors = new();
 
+    private HashSet<string> seenPatterns = new();
+
     void Start()
     {
         ClearPatterns();
         SetPattern(pattern, cellCentered);
+    }
+
+    private string GetGridHash()
+    {
+        var sb = new System.Text.StringBuilder();
+        foreach (var pos in tileColors.Keys)
+            sb.Append($"{pos.x},{pos.y};");
+        return sb.ToString();
     }
 
     private BoundsInt GetCameraTileBounds()
@@ -211,7 +221,12 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        generation++;
+        // Check if the current grid configuration has been seen before
+        string gridHash = GetGridHash();
+        if (!seenPatterns.Contains(gridHash))
+            seenPatterns.Add(gridHash);
+        else
+            Debug.Log($"Orbit detected at generation {generation}");
 
         // Swap and clear
         Tilemap temp = currentState;
