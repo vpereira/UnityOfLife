@@ -727,7 +727,7 @@ MonoBehaviour:
   cellTile: {fileID: 11400000, guid: bf9702f1ccc914367aabee074a69e9d8, type: 2}
   updateInterval: 0.5
   cellCentered: 1
-  pattern: {fileID: 11400000, guid: 127a6b6f74bec42e7951419b45476d61, type: 2}
+  pattern: {fileID: 11400000, guid: dfc63f4219d1b41de8338c79db1b743d, type: 2}
   genesisPoint: {fileID: 600011677}
   gridLines: {fileID: 15742627}
   wrapAroundEnabled: 0
