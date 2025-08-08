@@ -536,8 +536,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ComponentVersion: 1
   m_AssetsPPU: 16
-  m_RefResolutionX: 1920
-  m_RefResolutionY: 1080
+  m_RefResolutionX: 2048
+  m_RefResolutionY: 2048
   m_CropFrame: 0
   m_GridSnapping: 1
   m_FilterMode: 0
@@ -730,7 +730,7 @@ MonoBehaviour:
   pattern: {fileID: 11400000, guid: dfc63f4219d1b41de8338c79db1b743d, type: 2}
   genesisPoint: {fileID: 600011677}
   gridLines: {fileID: 15742627}
-  wrapAroundEnabled: 0
+  wrapAroundEnabled: 1
   defaultPatternColor: {r: 1, g: 1, b: 1, a: 1}
   patternLibrary:
   - {fileID: 11400000, guid: befc536931ce34bfdabceb1f14ccc5e5, type: 2}
@@ -741,6 +741,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d8a7fbcd0836148aeb4926b72f36833b, type: 2}
   - {fileID: 11400000, guid: 127a6b6f74bec42e7951419b45476d61, type: 2}
   - {fileID: 11400000, guid: dfc63f4219d1b41de8338c79db1b743d, type: 2}
+  patternColors:
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 1, b: 0, a: 1}
+  - {r: 0.9245283, g: 0.528046, b: 0.047970813, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 0.7735849, g: 0.0693307, b: 0.45812306, a: 1}
+  - {r: 0.07613921, g: 0.5417283, b: 0.5566038, a: 1}
+  - {r: 0.5568628, g: 0.074509814, b: 0.21495382, a: 1}
 --- !u!1 &953078740
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,11 +1040,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2067349970}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1806, y: -1060}
-  m_SizeDelta: {x: 188, y: 50}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -114, y: -40}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 1, y: 0}
 --- !u!114 &1265685610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1057,7 +1065,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Wrap Around:'
+  m_text: 'Wrap Around: '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e2e6a15ac366a4c8892935c6bc383644, type: 2}
   m_sharedMaterial: {fileID: -1882182994655511271, guid: e2e6a15ac366a4c8892935c6bc383644, type: 2}
@@ -1122,7 +1130,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -67.243835, y: 0, z: 0.7612915, w: 22.240173}
+  m_margin: {x: -67.243835, y: 0, z: -84.05975, w: 22.240173}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

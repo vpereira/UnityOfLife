@@ -25,6 +25,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Color defaultPatternColor = Color.white;
     [SerializeField] private List<Pattern> patternLibrary = new();
 
+    [SerializeField]
+    private Color[] patternColors = new Color[]
+    {
+        Color.red,
+        Color.green,
+        Color.yellow,
+        Color.black,
+    };
+
     private int generation = 0;
     public int Generation => generation;
 
@@ -34,6 +43,7 @@ public class GameManager : MonoBehaviour
 
     private bool useRandomColorNext = false;
 
+    private int colorIndex = 1; 
 
     private Dictionary<Vector3Int, Color> tileColors = new();
     private InputManager inputManager = new InputManager();
@@ -103,6 +113,13 @@ public class GameManager : MonoBehaviour
         return new Color(Random.value, Random.value, Random.value);
     }
 
+    private Color GetNextColor()
+    {
+        Color color = patternColors[colorIndex];
+        colorIndex = (colorIndex + 1) % patternColors.Length;
+        return color;
+    }
+
     private Vector3Int GetGenesisPosition()
     {
         return currentState.WorldToCell(genesisPoint.transform.position);
@@ -122,7 +139,7 @@ public class GameManager : MonoBehaviour
 
     private void PlacePattern(Pattern pattern, Vector3Int cellPosition)
     {
-        Color patternColor = useRandomColorNext ? GetRandomColor() : defaultPatternColor;
+        Color patternColor = useRandomColorNext ? GetNextColor() : defaultPatternColor;
         PlacePattern(pattern, cellPosition, patternColor);
     }
 
@@ -293,7 +310,7 @@ public class GameManager : MonoBehaviour
                     : pattern;
 
                 Color selectedColor = inputManager.UseRandomColor
-                    ? GetRandomColor()
+                    ? GetNextColor() 
                     : defaultPatternColor;
 
                 PlacePattern(selectedPattern, randomCell, selectedColor);
