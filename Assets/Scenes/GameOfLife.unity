@@ -725,13 +725,22 @@ MonoBehaviour:
   currentState: {fileID: 1041808152}
   nextState: {fileID: 384575654}
   cellTile: {fileID: 11400000, guid: bf9702f1ccc914367aabee074a69e9d8, type: 2}
-  updateInterval: 0.5
+  updateInterval: 0.2
   cellCentered: 1
   pattern: {fileID: 11400000, guid: dfc63f4219d1b41de8338c79db1b743d, type: 2}
   genesisPoint: {fileID: 600011677}
   gridLines: {fileID: 15742627}
   wrapAroundEnabled: 0
   defaultPatternColor: {r: 1, g: 1, b: 1, a: 1}
+  patternLibrary:
+  - {fileID: 11400000, guid: befc536931ce34bfdabceb1f14ccc5e5, type: 2}
+  - {fileID: 11400000, guid: 9f6c69f823b4b4f84b5535c1462d1b34, type: 2}
+  - {fileID: 11400000, guid: 9708683f2007046a3b232e7cb065b7fa, type: 2}
+  - {fileID: 11400000, guid: 15962eb96e4bb49ac8702884f7aed879, type: 2}
+  - {fileID: 11400000, guid: f98c3a418e84745e7b64849bbee28989, type: 2}
+  - {fileID: 11400000, guid: d8a7fbcd0836148aeb4926b72f36833b, type: 2}
+  - {fileID: 11400000, guid: 127a6b6f74bec42e7951419b45476d61, type: 2}
+  - {fileID: 11400000, guid: dfc63f4219d1b41de8338c79db1b743d, type: 2}
 --- !u!1 &953078740
 GameObject:
   m_ObjectHideFlags: 0

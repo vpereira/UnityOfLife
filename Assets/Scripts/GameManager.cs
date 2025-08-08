@@ -32,13 +32,11 @@ public class GameManager : MonoBehaviour
 
     private Coroutine simulationCoroutine;
 
-    private bool useRandomPatternNext = false;
-
     private bool useRandomColorNext = false;
 
 
     private Dictionary<Vector3Int, Color> tileColors = new();
-
+    private InputManager inputManager = new InputManager();
 
 
     private HashSet<string> seenPatterns = new();
@@ -111,16 +109,21 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private void PlacePattern(Pattern pattern, Vector3Int cellPosition)
+    private void PlacePattern(Pattern pattern, Vector3Int cellPosition, Color color)
     {
-        Color patternColor = useRandomColorNext ? GetRandomColor() : defaultPatternColor;
         foreach (Vector2Int cell in pattern.cells)
         {
             Vector3Int targetCell = cellPosition + new Vector3Int(cell.x, cell.y, 0);
             currentState.SetTile(targetCell, cellTile);
-            currentState.SetColor(targetCell, patternColor);
-            tileColors[targetCell] = patternColor; // Store the color for this cell
+            currentState.SetColor(targetCell, color);
+            tileColors[targetCell] = color;
         }
+    }
+
+    private void PlacePattern(Pattern pattern, Vector3Int cellPosition)
+    {
+        Color patternColor = useRandomColorNext ? GetRandomColor() : defaultPatternColor;
+        PlacePattern(pattern, cellPosition, patternColor);
     }
 
     private void ClearPatterns()
@@ -235,12 +238,16 @@ public class GameManager : MonoBehaviour
         else
             Debug.Log($"Orbit detected at generation {generation}");
 
-        // Swap and clear
-        Tilemap temp = currentState;
-        currentState = nextState;
+        currentState.ClearAllTiles();
+        foreach (var posColor in newTileColors)
+        {
+            currentState.SetTile(posColor.Key, cellTile);
+            currentState.SetColor(posColor.Key, posColor.Value);
+        }
         tileColors = newTileColors;
-        nextState = temp;
         nextState.ClearAllTiles();
+        generation++;
+
     }
 
 
@@ -268,32 +275,35 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G))
+        inputManager.Update();
+
+        if (inputManager.ShouldTriggerCommand(KeyCode.G))
         {
             gridLines.SetActive(!gridLines.activeSelf);
         }
 
-        if (Input.GetKeyDown(KeyCode.C))
-            useRandomColorNext = true;
-
-        if (Input.GetKeyDown(KeyCode.P))
-            useRandomPatternNext = true;
-
-        if (Input.GetKeyDown(KeyCode.R))
+        if (inputManager.ShouldTriggerCommand(KeyCode.R))
         {
-            Vector3Int randomCell = GetRandomCellInsideCamera();
+            for (int i = 0; i < inputManager.RepeatCount; i++)
+            {
+                Vector3Int randomCell = GetRandomCellInsideCamera();
 
-            Pattern selectedPattern = useRandomPatternNext && patternLibrary.Count > 0 ? patternLibrary[Random.Range(0, patternLibrary.Count)] : pattern;
+                Pattern selectedPattern = inputManager.UseRandomPattern && patternLibrary.Count > 0
+                    ? patternLibrary[Random.Range(0, patternLibrary.Count)]
+                    : pattern;
 
-            SetPattern(selectedPattern, false);
-            PlacePattern(selectedPattern, randomCell);
-            useRandomColorNext = false; // Reset the flag after placing the pattern
-            useRandomPatternNext = false; // Reset the flag after placing the pattern
+                Color selectedColor = inputManager.UseRandomColor
+                    ? GetRandomColor()
+                    : defaultPatternColor;
+
+                PlacePattern(selectedPattern, randomCell, selectedColor);
+            }
+
+            inputManager.ResetState();
         }
 
-        if (Input.GetKeyDown(KeyCode.W))
+        if (inputManager.ShouldTriggerCommand(KeyCode.W))
             wrapAroundEnabled = !wrapAroundEnabled;
-
     }
 
     private Vector3Int WrapCoordinate(Vector3Int cell, BoundsInt bounds)
