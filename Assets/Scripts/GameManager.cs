@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private bool wrapAroundEnabled = false;
 
+    [SerializeField] private GameObject uiCanvasRoot;
+
     [SerializeField] private Color defaultPatternColor = Color.white;
     [SerializeField] private List<Pattern> patternLibrary = new();
 
@@ -299,6 +301,11 @@ public class GameManager : MonoBehaviour
             gridLines.SetActive(!gridLines.activeSelf);
         }
 
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            uiCanvasRoot.SetActive(!uiCanvasRoot.activeSelf);
+        }
+
         if (inputManager.ShouldTriggerCommand(KeyCode.R))
         {
             for (int i = 0; i < inputManager.RepeatCount; i++)
@@ -310,7 +317,7 @@ public class GameManager : MonoBehaviour
                     : pattern;
 
                 Color selectedColor = inputManager.UseRandomColor
-                    ? GetNextColor() 
+                    ? GetNextColor()
                     : defaultPatternColor;
 
                 PlacePattern(selectedPattern, randomCell, selectedColor);
