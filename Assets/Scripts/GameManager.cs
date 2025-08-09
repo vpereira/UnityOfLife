@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
 
     private bool useRandomColorNext = false;
 
-    private int colorIndex = 1; 
+    private int colorIndex = 0;
 
     private Dictionary<Vector3Int, Color> tileColors = new();
     private InputManager inputManager = new InputManager();
