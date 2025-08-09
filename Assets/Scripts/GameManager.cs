@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Color defaultPatternColor = Color.white;
     [SerializeField] private List<Pattern> patternLibrary = new();
 
+    [SerializeField] private GameObject crosshair;
+
     [SerializeField]
     private Color[] patternColors = new Color[]
     {
@@ -50,6 +52,7 @@ public class GameManager : MonoBehaviour
     private Dictionary<Vector3Int, Color> tileColors = new();
     private InputManager inputManager = new InputManager();
 
+    private bool placementModeActive = false;
 
     private HashSet<string> seenPatterns = new();
 
@@ -319,6 +322,43 @@ public class GameManager : MonoBehaviour
 
         if (inputManager.ShouldTriggerCommand(KeyCode.W))
             wrapAroundEnabled = !wrapAroundEnabled;
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            placementModeActive = !placementModeActive;
+            crosshair.SetActive(placementModeActive);
+
+            if (placementModeActive)
+            {
+                Vector3 camCenter = Camera.main.transform.position;
+                Vector3Int centerCell = currentState.WorldToCell(camCenter);
+                crosshair.transform.position = currentState.GetCellCenterWorld(centerCell);
+            }
+        }
+
+        if (placementModeActive)
+        {
+            Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            worldPos.z = 0; // ensure 2D plane
+            Vector3Int cellPos = currentState.WorldToCell(worldPos);
+            cellPos.z = 0;
+            crosshair.transform.position = currentState.GetCellCenterWorld(cellPos);
+
+            if (Input.GetMouseButtonDown(0)) // left click: place pattern here
+            {
+                // Use your existing color flow: next color if flagged, else default
+                Color colorToUse = useRandomColorNext ? GetNextColor() : defaultPatternColor;
+                PlacePattern(pattern, cellPos, colorToUse);
+                useRandomColorNext = false; // reset one-shot color flag if you want
+            }
+
+            // Exit placement mode via Esc or right-click
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
+            {
+                placementModeActive = false;
+                crosshair.SetActive(false);
+            }
+        }
     }
 
     private Vector3Int WrapCoordinate(Vector3Int cell, BoundsInt bounds)
