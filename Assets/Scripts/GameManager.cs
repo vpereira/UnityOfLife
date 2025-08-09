@@ -53,6 +53,8 @@ public class GameManager : MonoBehaviour
 
     private HashSet<string> seenPatterns = new();
 
+    public int GetAliveCellsCount() => tileColors.Count;
+
     void Start()
     {
         ClearPatterns();
@@ -172,21 +174,6 @@ public class GameManager : MonoBehaviour
             // Wait for the specified update interval
             yield return new WaitForSeconds(updateInterval);
         }
-    }
-
-    public int GetAliveCellsCount()
-    {
-        int aliveCount = 0;
-
-        // Iterate through all cells in the current state tilemap
-        foreach (Vector3Int cell in currentState.cellBounds.allPositionsWithin)
-        {
-            if (IsCellAlive(cell))
-            {
-                aliveCount++;
-            }
-        }
-        return aliveCount;
     }
 
     // Suppose you're checking cell (10,10) and it has live neighbors at:
