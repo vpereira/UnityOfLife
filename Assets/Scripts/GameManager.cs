@@ -120,6 +120,10 @@ public class GameManager : MonoBehaviour
     private Color GetNextColor()
     {
         Color color = patternColors[colorIndex];
+
+        if (color == null)
+            return defaultPatternColor;
+
         colorIndex = (colorIndex + 1) % patternColors.Length;
         return color;
     }
