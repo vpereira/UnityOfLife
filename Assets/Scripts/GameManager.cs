@@ -249,9 +249,10 @@ public class GameManager : MonoBehaviour
             else if (isAlive && (aliveNeighbors == 2 || aliveNeighbors == 3))
             {
                 nextState.SetTile(cell, cellTile);
-                if (tileColors.TryGetValue(cell, out var color))
-                    nextState.SetColor(cell, color);
-                newTileColors[cell] = color; // Keep the same color
+                Color keepColor = defaultPatternColor;
+                tileColors.TryGetValue(cell, out keepColor);
+                nextState.SetColor(cell, keepColor);
+                newTileColors[cell] = keepColor; // Keep the same color
             }
             else
             {
@@ -287,14 +288,22 @@ public class GameManager : MonoBehaviour
             {
                 if (x == 0 && y == 0) continue;
 
-                Vector3Int neighbor = new Vector3Int(cell.x + x, cell.y + y, 0);
-                if (bounds.Contains(neighbor) && tileColors.TryGetValue(neighbor, out var color))
+                var n = new Vector3Int(cell.x + x, cell.y + y, 0);
+
+                // match CountAliveNeighbors behavior
+                if (!bounds.Contains(n))
+                {
+                    if (!wrapAroundEnabled) continue;
+                    n = WrapCoordinate(n, bounds);
+                }
+
+                if (tileColors.TryGetValue(n, out var color))
                     return color;
             }
         }
-
         return defaultPatternColor;
     }
+
 
 
     private bool IsCellAlive(Vector3Int cell)
