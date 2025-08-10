@@ -8,18 +8,18 @@ using System.Collections;
 public class InputManager
 {
     // Buffered modifiers
-    public int  RepeatCount     { get; private set; } = 1;
-    public bool UseRandomColor  { get; private set; }
-    public bool UseRandomPattern{ get; private set; }
+    public int RepeatCount { get; private set; } = 1;
+    public bool UseRandomColor { get; private set; }
+    public bool UseRandomPattern { get; private set; }
 
     // One-shot actions (true only for the frame you read them, then ClearOneShot)
-    public bool ToggleGrid        { get; private set; }
-    public bool ToggleUI          { get; private set; }
-    public bool ToggleWrap        { get; private set; }
-    public bool TogglePlacement   { get; private set; }
-    public bool SpawnRequested    { get; private set; }
-    public bool PlacementClick    { get; private set; }   // LMB
-    public bool PlacementCancel   { get; private set; }   // Esc or RMB
+    public bool ToggleGrid { get; private set; }
+    public bool ToggleUI { get; private set; }
+    public bool ToggleWrap { get; private set; }
+    public bool TogglePlacement { get; private set; }
+    public bool SpawnRequested { get; private set; }
+    public bool PlacementClick { get; private set; }   // LMB
+    public bool PlacementCancel { get; private set; }   // Esc or RMB
 
     // Combo timeout
     [SerializeField] private float inputTimeout = 1.5f;
@@ -48,12 +48,12 @@ public class InputManager
         }
 
         // --- modifiers (buffered until command fires or timeout) ---
-        if (Input.GetKeyDown(KeyCode.C)) { UseRandomColor = true;   lastInputTime = Time.time; }
+        if (Input.GetKeyDown(KeyCode.C)) { UseRandomColor = true; lastInputTime = Time.time; }
         if (Input.GetKeyDown(KeyCode.P)) { UseRandomPattern = true; lastInputTime = Time.time; }
 
         // --- one-shot toggles/commands ---
         if (Input.GetKeyDown(KeyCode.G)) ToggleGrid = true;
-        if (Input.GetKeyDown(KeyCode.V)) ToggleUI   = true;
+        if (Input.GetKeyDown(KeyCode.V)) ToggleUI = true;
         if (Input.GetKeyDown(KeyCode.W)) ToggleWrap = true;
         if (Input.GetKeyDown(KeyCode.K)) TogglePlacement = true;
 
