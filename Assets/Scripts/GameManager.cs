@@ -5,30 +5,28 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Tilemaps")]
     [SerializeField] private Tilemap currentState;
     [SerializeField] private Tilemap nextState;
 
+    [Header("Tiles & Patterns")]
     [SerializeField] private Tile cellTile;
-
-    [SerializeField] private float updateInterval = 0.5f; //seconds
-
-    [SerializeField] private bool cellCentered;
-
     [SerializeField] private Pattern pattern;
-
-    [SerializeField] private GameObject genesisPoint;
-
-    [SerializeField] private GameObject gridLines;
-
-    [SerializeField] private bool wrapAroundEnabled = false;
-
-    [SerializeField] private GameObject uiCanvasRoot;
-
-    [SerializeField] private Color defaultPatternColor = Color.white;
     [SerializeField] private List<Pattern> patternLibrary = new();
 
+    [Header("Simulation Settings")]
+    [SerializeField] private float updateInterval = 0.5f; //seconds
+    [SerializeField] private bool cellCentered = true;
+    [SerializeField] private bool wrapAroundEnabled = true;
+
+    [Header("UI Elements")]
+    [SerializeField] private GameObject genesisPoint;
+    [SerializeField] private GameObject gridLines;
+    [SerializeField] private GameObject uiCanvasRoot;
     [SerializeField] private GameObject crosshair;
 
+    [Header("Colors")]
+    [SerializeField] private Color defaultPatternColor = Color.white;
     [SerializeField]
     private Color[] patternColors = new Color[]
     {
@@ -57,6 +55,12 @@ public class GameManager : MonoBehaviour
     private HashSet<string> seenPatterns = new();
 
     public int GetAliveCellsCount() => tileColors.Count;
+    private Camera cam; // Camera.main cache
+
+    void Awake()
+    {
+        cam = Camera.main;
+    }
 
     void Start()
     {
@@ -74,7 +78,6 @@ public class GameManager : MonoBehaviour
 
     private BoundsInt GetCameraTileBounds()
     {
-        Camera cam = Camera.main;
         float camHeight = cam.orthographicSize * 2f;
         float camWidth = camHeight * cam.aspect;
 
@@ -101,7 +104,7 @@ public class GameManager : MonoBehaviour
         // Set the pattern in the current state tilemap
         if (isCentered)
         {
-            Vector3 cameraCenterWorld = Camera.main.transform.position;
+            Vector3 cameraCenterWorld = cam.transform.position;
             offset = currentState.WorldToCell(cameraCenterWorld);
 
             // Optional: snap to nearest tile
@@ -177,8 +180,7 @@ public class GameManager : MonoBehaviour
         while (enabled)
         {
             // Update the next state based on the current state
-            UpdateNextState();
-            // Wait for the specified update interval
+            StepsSimulation();
             yield return new WaitForSeconds(updateInterval);
         }
     }
@@ -214,7 +216,7 @@ public class GameManager : MonoBehaviour
         return aliveCount;
     }
 
-    private void UpdateNextState()
+    private void StepsSimulation()
     {
         BoundsInt cameraBounds = GetCameraTileBounds();
         Dictionary<Vector3Int, Color> newTileColors = new();
@@ -330,7 +332,7 @@ public class GameManager : MonoBehaviour
 
             if (placementModeActive)
             {
-                Vector3 camCenter = Camera.main.transform.position;
+                Vector3 camCenter = cam.transform.position;
                 Vector3Int centerCell = currentState.WorldToCell(camCenter);
                 crosshair.transform.position = currentState.GetCellCenterWorld(centerCell);
             }
@@ -338,7 +340,7 @@ public class GameManager : MonoBehaviour
 
         if (placementModeActive)
         {
-            Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 worldPos = cam.ScreenToWorldPoint(Input.mousePosition);
             worldPos.z = 0; // ensure 2D plane
             Vector3Int cellPos = currentState.WorldToCell(worldPos);
             cellPos.z = 0;
@@ -377,7 +379,6 @@ public class GameManager : MonoBehaviour
 
     private Vector3Int GetRandomCellInsideCamera()
     {
-        Camera cam = Camera.main;
         float camHeight = cam.orthographicSize * 2f;
         float camWidth = camHeight * cam.aspect;
 
