@@ -289,6 +289,10 @@ public class GameManager : MonoBehaviour
         return currentState.GetTile(cell) == cellTile;
     }
 
+    private Color GetColor(bool modifier)
+    {
+        return modifier ? GetNextColor() : defaultPatternColor;
+    }
 
     void Update()
     {
@@ -327,9 +331,7 @@ public class GameManager : MonoBehaviour
                     ? patternLibrary[Random.Range(0, patternLibrary.Count)]
                     : pattern;
 
-                Color selectedColor = inputManager.UseRandomColor ? GetNextColor() : defaultPatternColor;
-
-                PlacePattern(selectedPattern, randomCell, selectedColor);
+                PlacePattern(selectedPattern, randomCell, GetColor(inputManager.UseRandomColor));
             }
             inputManager.ResetState(); // clear buffered C/P and number
         }
@@ -344,8 +346,7 @@ public class GameManager : MonoBehaviour
 
             if (inputManager.PlacementClick)
             {
-                Color colorToUse = useRandomColorNext ? GetNextColor() : defaultPatternColor;
-                PlacePattern(pattern, cellPos, colorToUse);
+                PlacePattern(pattern, cellPos, GetColor(useRandomColorNext));
                 useRandomColorNext = false;
             }
 
