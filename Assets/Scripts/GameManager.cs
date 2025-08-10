@@ -55,6 +55,8 @@ public class GameManager : MonoBehaviour
     private HashSet<string> seenPatterns = new();
 
     public int GetAliveCellsCount() => tileColors.Count;
+    private static void ToggleActive(GameObject go) => go.SetActive(!go.activeSelf);
+
     private Camera cam; // Camera.main cache
 
     void Awake()
@@ -144,11 +146,7 @@ public class GameManager : MonoBehaviour
 
     private Color GetNextColor()
     {
-        Color color = patternColors[colorIndex];
-
-        if (color == null)
-            return defaultPatternColor;
-
+        Color color = (colorIndex >= 0 && colorIndex < patternColors.Length) ? patternColors[colorIndex] : defaultPatternColor;
         colorIndex = (colorIndex + 1) % patternColors.Length;
         return color;
     }
@@ -225,10 +223,7 @@ public class GameManager : MonoBehaviour
                     else
                         continue;
 
-                if (IsCellAlive(neighbor))
-                {
-                    aliveCount++;
-                }
+                if (IsCellAlive(neighbor)) aliveCount++;
             }
         }
         return aliveCount;
@@ -317,10 +312,10 @@ public class GameManager : MonoBehaviour
         inputManager.Poll();
 
         if (inputManager.ToggleGrid)
-            gridLines.SetActive(!gridLines.activeSelf);
+            ToggleActive(gridLines);
 
         if (inputManager.ToggleUI)
-            uiCanvasRoot.SetActive(!uiCanvasRoot.activeSelf);
+            ToggleActive(uiCanvasRoot);
 
         if (inputManager.ToggleWrap)
             wrapAroundEnabled = !wrapAroundEnabled;
@@ -328,7 +323,7 @@ public class GameManager : MonoBehaviour
         if (inputManager.TogglePlacement)
         {
             placementModeActive = !placementModeActive;
-            crosshair.SetActive(placementModeActive);
+            ToggleActive(crosshair);
             if (placementModeActive)
             {
                 Vector3 camCenter = cam.transform.position;
@@ -371,7 +366,7 @@ public class GameManager : MonoBehaviour
             if (inputManager.PlacementCancel)
             {
                 placementModeActive = false;
-                crosshair.SetActive(false);
+                ToggleActive(crosshair);
             }
         }
 
@@ -392,6 +387,4 @@ public class GameManager : MonoBehaviour
 
         return new Vector3Int(x, y, 0);
     }
-
-
 }
