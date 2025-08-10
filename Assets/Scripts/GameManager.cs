@@ -153,8 +153,7 @@ public class GameManager : MonoBehaviour
 
     private void PlacePattern(Pattern pattern, Vector3Int cellPosition)
     {
-        Color patternColor = useRandomColorNext ? GetNextColor() : defaultPatternColor;
-        PlacePattern(pattern, cellPosition, patternColor);
+        PlacePattern(pattern, cellPosition, GetColor(useRandomColorNext));
     }
 
     private void ClearPatterns()
