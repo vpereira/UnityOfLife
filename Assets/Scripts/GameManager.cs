@@ -76,12 +76,31 @@ public class GameManager : MonoBehaviour
         return sb.ToString();
     }
 
+    private void GetCameraRect(out float camWidth, out float camHeight, out Vector3 bottomLeft)
+    {
+        camHeight = cam.orthographicSize * 2f;
+        camWidth = camHeight * cam.aspect;
+        bottomLeft = cam.transform.position - new Vector3(camWidth / 2f, camHeight / 2f, 0f);
+    }
+
+    private Vector3Int GetRandomCellInsideCamera()
+    {
+        GetCameraRect(out var camWidth, out var camHeight, out var bottomLeft);
+
+        // Pick a random point inside the view
+        float randomX = Random.Range(0f, camWidth);
+        float randomY = Random.Range(0f, camHeight);
+
+        Vector3 worldPos = bottomLeft + new Vector3(randomX, randomY, 0f);
+        Vector3Int cellPos = currentState.WorldToCell(worldPos);
+        cellPos.z = 0;
+
+        return cellPos;
+    }
     private BoundsInt GetCameraTileBounds()
     {
-        float camHeight = cam.orthographicSize * 2f;
-        float camWidth = camHeight * cam.aspect;
+        GetCameraRect(out var camWidth, out var camHeight, out var bottomLeft);
 
-        Vector3 bottomLeft = cam.transform.position - new Vector3(camWidth / 2f, camHeight / 2f, 0);
         Vector3 topRight = cam.transform.position + new Vector3(camWidth / 2f, camHeight / 2f, 0);
 
         Vector3Int min = currentState.WorldToCell(bottomLeft);
@@ -374,22 +393,5 @@ public class GameManager : MonoBehaviour
         return new Vector3Int(x, y, 0);
     }
 
-    private Vector3Int GetRandomCellInsideCamera()
-    {
-        float camHeight = cam.orthographicSize * 2f;
-        float camWidth = camHeight * cam.aspect;
 
-        // Bottom-left corner in world space
-        Vector3 bottomLeft = cam.transform.position - new Vector3(camWidth / 2f, camHeight / 2f, 0f);
-
-        // Pick a random point inside the view
-        float randomX = Random.Range(0f, camWidth);
-        float randomY = Random.Range(0f, camHeight);
-
-        Vector3 worldPos = bottomLeft + new Vector3(randomX, randomY, 0f);
-        Vector3Int cellPos = currentState.WorldToCell(worldPos);
-        cellPos.z = 0;
-
-        return cellPos;
-    }
 }
