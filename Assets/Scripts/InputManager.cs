@@ -1,67 +1,82 @@
 using UnityEngine;
+using System.Collections;
 
 /// <summary>
-/// Simple input manager to buffer number keys and support modifier keys like C and P.
-/// Call Update() every frame from GameManager, and use ShouldTriggerCommand() to detect command triggers.
+/// Reads Unity input each frame and exposes one-shot flags + buffered modifiers.
+/// Call Poll() from Update(), read flags, then call ClearOneShot().
 /// </summary>
 public class InputManager
 {
-    public int RepeatCount { get; private set; } = 1;
-    public bool UseRandomColor { get; private set; } = false;
-    public bool UseRandomPattern { get; private set; } = false;
+    // Buffered modifiers
+    public int  RepeatCount     { get; private set; } = 1;
+    public bool UseRandomColor  { get; private set; }
+    public bool UseRandomPattern{ get; private set; }
 
-    private float inputTimeout = 1.5f;
+    // One-shot actions (true only for the frame you read them, then ClearOneShot)
+    public bool ToggleGrid        { get; private set; }
+    public bool ToggleUI          { get; private set; }
+    public bool ToggleWrap        { get; private set; }
+    public bool TogglePlacement   { get; private set; }
+    public bool SpawnRequested    { get; private set; }
+    public bool PlacementClick    { get; private set; }   // LMB
+    public bool PlacementCancel   { get; private set; }   // Esc or RMB
+
+    // Combo timeout
+    [SerializeField] private float inputTimeout = 1.5f;
     private float lastInputTime = -Mathf.Infinity;
 
-    public void Update()
+    public void Poll()
     {
-        // Timeout handling
+        // timeout numeric/modifier buffer
         if (Time.time - lastInputTime > inputTimeout)
-        {
             ResetState();
-        }
 
-        // Detect number input (0–9)
+        // --- digits 0..9 (buffer for RepeatCount) ---
         for (KeyCode key = KeyCode.Alpha0; key <= KeyCode.Alpha9; key++)
         {
             if (Input.GetKeyDown(key))
             {
                 int digit = key - KeyCode.Alpha0;
-                // Ignore leading zeros
-                if (digit == 0 && RepeatCount == 1) return;
-
-                if (RepeatCount == 1) RepeatCount = 0;
-                RepeatCount = RepeatCount * 10 + digit;
-                lastInputTime = Time.time;
-                return;
+                if (!(digit == 0 && RepeatCount == 1)) // ignore leading zero
+                {
+                    if (RepeatCount == 1) RepeatCount = 0;
+                    RepeatCount = RepeatCount * 10 + digit;
+                    lastInputTime = Time.time;
+                }
+                return; // only one digit per frame
             }
         }
 
-        // Detect modifier keys
-        if (Input.GetKeyDown(KeyCode.C))
+        // --- modifiers (buffered until command fires or timeout) ---
+        if (Input.GetKeyDown(KeyCode.C)) { UseRandomColor = true;   lastInputTime = Time.time; }
+        if (Input.GetKeyDown(KeyCode.P)) { UseRandomPattern = true; lastInputTime = Time.time; }
+
+        // --- one-shot toggles/commands ---
+        if (Input.GetKeyDown(KeyCode.G)) ToggleGrid = true;
+        if (Input.GetKeyDown(KeyCode.V)) ToggleUI   = true;
+        if (Input.GetKeyDown(KeyCode.W)) ToggleWrap = true;
+        if (Input.GetKeyDown(KeyCode.K)) TogglePlacement = true;
+
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            UseRandomColor = true;
-            lastInputTime = Time.time;
+            SpawnRequested = true;
+            if (RepeatCount < 1) RepeatCount = 1;
         }
 
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            UseRandomPattern = true;
-            lastInputTime = Time.time;
-        }
+        // Placement actions
+        if (Input.GetMouseButtonDown(0)) PlacementClick = true;
+        if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Escape)) PlacementCancel = true;
     }
 
-    /// <summary>
-    /// Call this from GameManager to check if a trigger key was pressed (e.g., R, G, V).
-    /// </summary>
-    public bool ShouldTriggerCommand(KeyCode commandKey)
+    /// <summary>Clear only one-shot flags after GameManager processes them.</summary>
+    public void ClearOneShot()
     {
-        return Input.GetKeyDown(commandKey);
+        ToggleGrid = ToggleUI = ToggleWrap = TogglePlacement = false;
+        SpawnRequested = false;
+        PlacementClick = PlacementCancel = false;
     }
 
-    /// <summary>
-    /// Reset state after executing the command or after timeout.
-    /// </summary>
+    /// <summary>Reset numeric/modifier buffer (call after executing R, or on timeout).</summary>
     public void ResetState()
     {
         RepeatCount = 1;

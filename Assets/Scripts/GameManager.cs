@@ -288,23 +288,38 @@ public class GameManager : MonoBehaviour
     {
         return currentState.GetTile(cell) == cellTile;
     }
+
+
     void Update()
     {
-        inputManager.Update();
+        inputManager.Poll();
 
-        if (inputManager.ShouldTriggerCommand(KeyCode.G))
-        {
+        if (inputManager.ToggleGrid)
             gridLines.SetActive(!gridLines.activeSelf);
-        }
 
-        if (Input.GetKeyDown(KeyCode.V))
-        {
+        if (inputManager.ToggleUI)
             uiCanvasRoot.SetActive(!uiCanvasRoot.activeSelf);
+
+        if (inputManager.ToggleWrap)
+            wrapAroundEnabled = !wrapAroundEnabled;
+
+        if (inputManager.TogglePlacement)
+        {
+            placementModeActive = !placementModeActive;
+            crosshair.SetActive(placementModeActive);
+            if (placementModeActive)
+            {
+                Vector3 camCenter = cam.transform.position;
+                Vector3Int centerCell = currentState.WorldToCell(camCenter);
+                centerCell.z = 0;
+                crosshair.transform.position = currentState.GetCellCenterWorld(centerCell);
+            }
         }
 
-        if (inputManager.ShouldTriggerCommand(KeyCode.R))
+        if (inputManager.SpawnRequested)
         {
-            for (int i = 0; i < inputManager.RepeatCount; i++)
+            int count = inputManager.RepeatCount;
+            for (int i = 0; i < count; i++)
             {
                 Vector3Int randomCell = GetRandomCellInsideCamera();
 
@@ -312,56 +327,38 @@ public class GameManager : MonoBehaviour
                     ? patternLibrary[Random.Range(0, patternLibrary.Count)]
                     : pattern;
 
-                Color selectedColor = inputManager.UseRandomColor
-                    ? GetNextColor()
-                    : defaultPatternColor;
+                Color selectedColor = inputManager.UseRandomColor ? GetNextColor() : defaultPatternColor;
 
                 PlacePattern(selectedPattern, randomCell, selectedColor);
             }
-
-            inputManager.ResetState();
-        }
-
-        if (inputManager.ShouldTriggerCommand(KeyCode.W))
-            wrapAroundEnabled = !wrapAroundEnabled;
-
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            placementModeActive = !placementModeActive;
-            crosshair.SetActive(placementModeActive);
-
-            if (placementModeActive)
-            {
-                Vector3 camCenter = cam.transform.position;
-                Vector3Int centerCell = currentState.WorldToCell(camCenter);
-                crosshair.transform.position = currentState.GetCellCenterWorld(centerCell);
-            }
+            inputManager.ResetState(); // clear buffered C/P and number
         }
 
         if (placementModeActive)
         {
             Vector3 worldPos = cam.ScreenToWorldPoint(Input.mousePosition);
-            worldPos.z = 0; // ensure 2D plane
+            worldPos.z = 0;
             Vector3Int cellPos = currentState.WorldToCell(worldPos);
             cellPos.z = 0;
             crosshair.transform.position = currentState.GetCellCenterWorld(cellPos);
 
-            if (Input.GetMouseButtonDown(0)) // left click: place pattern here
+            if (inputManager.PlacementClick)
             {
-                // Use your existing color flow: next color if flagged, else default
                 Color colorToUse = useRandomColorNext ? GetNextColor() : defaultPatternColor;
                 PlacePattern(pattern, cellPos, colorToUse);
-                useRandomColorNext = false; // reset one-shot color flag if you want
+                useRandomColorNext = false;
             }
 
-            // Exit placement mode via Esc or right-click
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
+            if (inputManager.PlacementCancel)
             {
                 placementModeActive = false;
                 crosshair.SetActive(false);
             }
         }
+
+        inputManager.ClearOneShot(); // clear per-frame toggles
     }
+
 
     private Vector3Int WrapCoordinate(Vector3Int cell, BoundsInt bounds)
     {
