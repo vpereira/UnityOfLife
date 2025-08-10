@@ -78,39 +78,6 @@ public class GameManager : MonoBehaviour
         return sb.ToString();
     }
 
-    private void GetCameraRect(out float camWidth, out float camHeight, out Vector3 bottomLeft)
-    {
-        camHeight = cam.orthographicSize * 2f;
-        camWidth = camHeight * cam.aspect;
-        bottomLeft = cam.transform.position - new Vector3(camWidth / 2f, camHeight / 2f, 0f);
-    }
-
-    private Vector3Int GetRandomCellInsideCamera()
-    {
-        GetCameraRect(out var camWidth, out var camHeight, out var bottomLeft);
-
-        // Pick a random point inside the view
-        float randomX = Random.Range(0f, camWidth);
-        float randomY = Random.Range(0f, camHeight);
-
-        Vector3 worldPos = bottomLeft + new Vector3(randomX, randomY, 0f);
-        Vector3Int cellPos = currentState.WorldToCell(worldPos);
-        cellPos.z = 0;
-
-        return cellPos;
-    }
-    private BoundsInt GetCameraTileBounds()
-    {
-        GetCameraRect(out var camWidth, out var camHeight, out var bottomLeft);
-
-        Vector3 topRight = cam.transform.position + new Vector3(camWidth / 2f, camHeight / 2f, 0);
-
-        Vector3Int min = currentState.WorldToCell(bottomLeft);
-        Vector3Int max = currentState.WorldToCell(topRight);
-
-        return new BoundsInt(min.x, min.y, 0, max.x - min.x + 1, max.y - min.y + 1, 1);
-    }
-
 
     private void SetPattern(Pattern pattern, bool isCentered = true)
     {
@@ -231,7 +198,7 @@ public class GameManager : MonoBehaviour
 
     private void StepsSimulation()
     {
-        BoundsInt cameraBounds = GetCameraTileBounds();
+        BoundsInt cameraBounds = CameraGridUtil.GetCameraTileBounds(cam, currentState);
         Dictionary<Vector3Int, Color> newTileColors = new();
         // Iterate through visible camera area only
         foreach (Vector3Int cell in cameraBounds.allPositionsWithin)
@@ -347,7 +314,7 @@ public class GameManager : MonoBehaviour
             int count = inputManager.RepeatCount;
             for (int i = 0; i < count; i++)
             {
-                Vector3Int randomCell = GetRandomCellInsideCamera();
+                Vector3Int randomCell = CameraGridUtil.GetRandomCellInsideCamera(cam, currentState);
 
                 Pattern selectedPattern = inputManager.UseRandomPattern && patternLibrary.Count > 0
                     ? patternLibrary[Random.Range(0, patternLibrary.Count)]
