@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Tiles & Patterns")]
     [SerializeField] private Tile cellTile;
-    [SerializeField] private Pattern pattern;
+    [SerializeField] private Pattern defaultPattern;
     [SerializeField] private List<Pattern> patternLibrary = new();
 
     [Header("Simulation Settings")]
@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         ClearPatterns();
-        SetPattern(pattern, cellCentered);
+        SetPattern(defaultPattern, cellCentered);
     }
 
     private string GetGridHash()
@@ -283,6 +283,15 @@ public class GameManager : MonoBehaviour
         return modifier ? GetNextColor() : defaultPatternColor;
     }
 
+    private Pattern GetSelectedPattern(bool randomCell)
+    {
+        if (randomCell)
+        {
+            return patternLibrary[Random.Range(0, patternLibrary.Count)];
+        }
+        return defaultPattern;
+    }
+
     void Update()
     {
         inputManager.Poll();
@@ -316,9 +325,7 @@ public class GameManager : MonoBehaviour
             {
                 Vector3Int randomCell = CameraGridUtil.GetRandomCellInsideCamera(cam, currentState);
 
-                Pattern selectedPattern = inputManager.UseRandomPattern && patternLibrary.Count > 0
-                    ? patternLibrary[Random.Range(0, patternLibrary.Count)]
-                    : pattern;
+                Pattern selectedPattern = GetSelectedPattern(inputManager.UseRandomPattern);
 
                 PlacePattern(selectedPattern, randomCell, GetColor(inputManager.UseRandomColor));
             }
@@ -335,7 +342,7 @@ public class GameManager : MonoBehaviour
 
             if (inputManager.PlacementClick)
             {
-                PlacePattern(pattern, cellPos, GetColor(useRandomColorNext));
+                PlacePattern(defaultPattern, cellPos, GetColor(useRandomColorNext));
                 useRandomColorNext = false;
             }
 

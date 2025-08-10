@@ -470,7 +470,6 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
-  - component: {fileID: 519420033}
   - component: {fileID: 519420034}
   m_Layer: 0
   m_Name: Main Camera
@@ -597,18 +596,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &519420033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d298ea45e7df54060a7bf53f9b5c322b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &519420034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -813,14 +800,7 @@ MonoBehaviour:
   currentState: {fileID: 1041808152}
   nextState: {fileID: 384575654}
   cellTile: {fileID: 11400000, guid: bf9702f1ccc914367aabee074a69e9d8, type: 2}
-  updateInterval: 0.2
-  cellCentered: 1
-  pattern: {fileID: 11400000, guid: dfc63f4219d1b41de8338c79db1b743d, type: 2}
-  genesisPoint: {fileID: 600011677}
-  gridLines: {fileID: 15742627}
-  wrapAroundEnabled: 1
-  uiCanvasRoot: {fileID: 2067349965}
-  defaultPatternColor: {r: 1, g: 1, b: 1, a: 1}
+  defaultPattern: {fileID: 11400000, guid: 127a6b6f74bec42e7951419b45476d61, type: 2}
   patternLibrary:
   - {fileID: 11400000, guid: befc536931ce34bfdabceb1f14ccc5e5, type: 2}
   - {fileID: 11400000, guid: 9f6c69f823b4b4f84b5535c1462d1b34, type: 2}
@@ -830,7 +810,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d8a7fbcd0836148aeb4926b72f36833b, type: 2}
   - {fileID: 11400000, guid: 127a6b6f74bec42e7951419b45476d61, type: 2}
   - {fileID: 11400000, guid: dfc63f4219d1b41de8338c79db1b743d, type: 2}
+  updateInterval: 0.2
+  cellCentered: 1
+  wrapAroundEnabled: 1
+  genesisPoint: {fileID: 600011677}
+  gridLines: {fileID: 15742627}
+  uiCanvasRoot: {fileID: 2067349965}
   crosshair: {fileID: 85713632}
+  defaultPatternColor: {r: 1, g: 1, b: 1, a: 1}
   patternColors:
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 0, g: 1, b: 0, a: 1}
