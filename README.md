@@ -21,17 +21,24 @@ to my kids. Improved it for the sake of keeping my skills on C# + Unity sharp.
 
 ## Controls
 
-| Key Combo       | Action                                                      |
-|----------------|--------------------------------------------------------------|
-| `R`            | Spawn a new pattern randomly                                 |
-| `G`            | Toggle grid overlay                                          |
-| `C`            | Use a random color for the next pattern only                 |
-| `W`            | Toggle wrap around mode                                      |
-| `P`            | Use a random pattern from the library                        |
-| `V`            | Toggle UI elements                                           |
-| `5-R`          | Spawn 5 default-color patterns randomly                      |
-| `2-C-R`        | Spawn 2 random-colored patterns (next only)                  |
-| `5-C-P-R`      | Spawn 5 random-colored, random-pattern instances             |
+```
+| Key Combo       | Action                                                                 |
+|-----------------|------------------------------------------------------------------------|
+| `R`             | Spawn a new pattern with the currently selected pattern & color        |
+| `C`             | Use a random color for the next pattern only                           |
+| `P`             | Use a random pattern from the library for the next spawn only          |
+| `Z`             | Select **previous pattern** in library                                 |
+| `U`             | Select **next pattern** in library                                     |
+| `H`             | Select **previous color** in palette                                   |
+| `J`             | Select **next color** in palette                                       |
+| `G`             | Toggle grid overlay                                                    |
+| `W`             | Toggle wrap-around mode                                                |
+| `V`             | Toggle UI elements visibility                                          |
+| `K`             | Visually create a pattern. Mouse select where, Left click to create it | 
+| `5-R`           | Spawn 5 patterns with the **current** pattern & color                  |
+| `2-C-R`         | Spawn 2 random-colored patterns (next only)                            |
+| `5-C-P-R`       | Spawn 5 random-colored, random-pattern instances (next only)           |
+```
 
 > You can chain keys: a number modifier (`2`) applies to the next `R`, and keys like `C`, `P` act as flags.
 
