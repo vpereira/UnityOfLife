@@ -10,7 +10,6 @@ public class UISelectionController : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private TMP_Text patternNameText;
-    [SerializeField] private Image colorSwatchImage;
     [SerializeField] private RectTransform patternPreviewRoot; // has GridLayoutGroup
     [SerializeField] private Image previewCellPrefab;      // 1x1 white sprite Image prefab
     [SerializeField] private int previewPadding = 1;
@@ -46,12 +45,6 @@ public class UISelectionController : MonoBehaviour
     private void RefreshUI()
     {
         if (patternNameText) patternNameText.text = SelectedPattern ? SelectedPattern.name : "(no pattern)";
-        if (colorSwatchImage)
-        {
-            var c = SelectedColor;
-            c.a = 1f; // Ensure full opacity for swatch
-            colorSwatchImage.color = c;
-        }
         RebuildPreview();
     }
 
