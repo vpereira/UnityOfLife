@@ -19,6 +19,12 @@ to my kids. Improved it for the sake of keeping my skills on C# + Unity sharp.
 - Colorful Patterns  
 - Wrap around toggle  
 
+## Quick Start
+
+1. Open the project in Unity `6000.0.45f1` (Unity 6).
+2. Open the scene at `Assets/Scenes/GameOfLife.unity`.
+3. Press Play, then use the controls below to spawn patterns.
+
 ## Controls
 
 ```
@@ -79,9 +85,16 @@ A `GridLineDrawer` component dynamically draws grid lines to match the camera vi
 
 ## Requirements
 
-- Unity 6  
+- Unity 6 (`6000.0.45f1`)  
 - TextMeshPro  
 - Pixel Perfect Camera component  
+
+## Troubleshooting
+
+- UI not updating: make sure `UIManager` has `Grid` assigned in the inspector, and the `Grid` has `GameManager` attached.
+- Grid lines missing or offset: `GridLineDrawer` expects an orthographic camera.
+- Pattern preview missing: check `UISelectionController` has `patternLibrary`, `patternColors`, and `previewCellPrefab` assigned.
+- UI text missing: confirm TextMeshPro is imported and the UI text references are wired.
 
 ## TODO / Ideas
 

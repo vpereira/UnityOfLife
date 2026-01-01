@@ -24,16 +24,25 @@ public class UIManager : MonoBehaviour
     {
         if (gameManager == null)
         {
+            if (grid == null)
+            {
+                Debug.LogError("Grid reference is missing on UIManager.");
+                enabled = false;
+                return;
+            }
+
             gameManager = grid.GetComponent<GameManager>();
             if (gameManager == null)
             {
                 Debug.LogError("GameManager not found in the scene.");
+                enabled = false;
             }
         }
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (!gameManager) return;
         aliveCellsCount = gameManager.GetAliveCellsCount();
         StartCoroutine(UpdateFPS());
         StartCoroutine(UpdateAliveCells());
@@ -41,7 +50,7 @@ public class UIManager : MonoBehaviour
 
     private void UpdateAliveCellsText()
     {
-        aliveCellsText.text = "Alive Cells: " + ((byte)aliveCellsCount).ToString();
+        aliveCellsText.text = "Alive Cells: " + aliveCellsCount.ToString();
     }
 
     private void UpdateGenerationText()

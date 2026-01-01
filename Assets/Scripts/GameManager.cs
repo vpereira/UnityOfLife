@@ -311,7 +311,13 @@ public class GameManager : MonoBehaviour
     private string GetGridHash()
     {
         var sb = new System.Text.StringBuilder();
-        foreach (var pos in tileColors.Keys) sb.Append(pos.x).Append(',').Append(pos.y).Append(';');
+        var keys = new List<Vector3Int>(tileColors.Keys);
+        keys.Sort((a, b) =>
+        {
+            int cmp = a.x.CompareTo(b.x);
+            return cmp != 0 ? cmp : a.y.CompareTo(b.y);
+        });
+        foreach (var pos in keys) sb.Append(pos.x).Append(',').Append(pos.y).Append(';');
         return sb.ToString();
     }
 }
